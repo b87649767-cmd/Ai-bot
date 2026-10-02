@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI BOT TRADER | Smart Automated Trading</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#02050d;
+    color:#fff;
+    overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at 15% 20%,rgba(0,140,255,.18),transparent 30%),
+        radial-gradient(circle at 85% 70%,rgba(120,0,255,.16),transparent 30%);
+    pointer-events:none;
+    z-index:-5;
+}
+
+.grid{
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,140,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,140,255,.055) 1px,transparent 1px);
+    background-size:45px 45px;
+    z-index:-4;
+}
+
+.orb{
+    position:fixed;
+    width:280px;
+    height:280px;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.18;
+    pointer-events:none;
+    z-index:-3;
+}
+
+.orb.one{
+    background:#008cff;
+    top:10%;
+    left:-100px;
+    animation:orbOne 8s ease-in-out infinite alternate;
+}
+
+.orb.two{
+    background:#7200ff;
+    right:-100px;
+    bottom:10%;
+    animation:orbTwo 9s ease-in-out infinite alternate;
+}
+
+@keyframes orbOne{
+    from{transform:translate(0,0)}
+    to{transform:translate(100px,80px)}
+}
+
+@keyframes orbTwo{
+    from{transform:translate(0,0)}
+    to{transform:translate(-100px,-80px)}
+}
+
+/* ================= MAIN ================= */
+
+.page{
+    width:min(1180px,94%);
+    margin:20px auto 120px;
+    background:rgba(4,9,20,.9);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 30px 100px rgba(0,0,0,.55);
+}
+
+/* ================= NAV ================= */
+
+nav{
+    height:75px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.logo{
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.logo span{
+    color:#00d9ff;
+}
+
+.nav-links{
+    display:flex;
+    gap:28px;
+}
+
+.nav-links a{
+    color:#8e9bb0;
+    text-decoration:none;
+    font-size:13px;
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:#00d9ff;
+}
+
+.nav-btn{
+    color:#fff;
+    text-decoration:none;
+    background:#087cff;
+    padding:12px 19px;
+    border-radius:25px;
+    font-size:12px;
+    font-weight:bold;
+    box-shadow:0 0 20px rgba(0,124,255,.2);
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    min-height:650px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:35px;
+    padding:70px 55px;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 15px;
+    border:1px solid rgba(0,212,255,.25);
+    background:rgba(0,212,255,.06);
+    border-radius:30px;
+    color:#54dcff;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.7px;
+    margin-bottom:22px;
+}
+
+.badge-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#00eaff;
+    box-shadow:0 0 15px #00eaff;
+    animation:blink 1.2s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:.25}
+}
+
+.hero h1{
+    font-size:clamp(45px,6vw,78px);
+    line-height:.92;
+    letter-spacing:-4px;
+    margin-bottom:25px;
+}
+
+.hero h1 span{
+    color:#00d3ff;
+    text-shadow:0 0 30px rgba(0,211,255,.2);
+}
+
+.hero p{
+    max-width:560px;
+    color:#97a4b8;
+    font-size:16px;
+    line-height:1.8;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.primary-btn,
+.secondary-btn{
+    padding:15px 22px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.primary-btn{
+    background:#087fff;
+    color:#fff;
+    box-shadow:0 10px 35px rgba(0,127,255,.25);
+}
+
+.secondary-btn{
+    color:#dbe5f4;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.1);
+}
+
+/* ================= ROBOT ================= */
+
+.robot-area{
+    position:relative;
+    min-height:500px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.robot-glow{
+    position:absolute;
+    width:350px;
+    height:350px;
+    border-radius:50%;
+    background:rgba(0,153,255,.16);
+    filter:blur(55px);
+}
+
+.robot-ring{
+    position:absolute;
+    width:355px;
+    height:355px;
+    border-radius:50%;
+    border:1px solid rgba(0,205,255,.28);
+    animation:spin 12s linear infinite;
+}
+
+.robot-ring::before,
+.robot-ring::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+}
+
+.robot-ring::before{
+    width:11px;
+    height:11px;
+    background:#00eaff;
+    top:25px;
+    left:50%;
+    box-shadow:0 0 25px #00eaff;
+}
+
+.robot-ring::after{
+    width:7px;
+    height:7px;
+    background:#168dff;
+    right:28px;
+    bottom:60px;
+    box-shadow:0 0 20px #168dff;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+/* ROBOT BODY */
+
+.robot{
+    position:relative;
+    width:210px;
+    height:245px;
+    background:linear-gradient(145deg,#132039,#050914);
+    border:2px solid #168dff;
+    border-radius:45px 45px 55px 55px;
+    box-shadow:
+        0 0 45px rgba(0,144,255,.3),
+        inset 0 0 35px rgba(0,140,255,.1);
+    z-index:3;
+}
+
+.robot::before{
+    content:"";
+    position:absolute;
+    width:9px;
+    height:35px;
+    background:#168dff;
+    top:-38px;
+    left:100px;
+}
+
+.robot::after{
+    content:"";
+    position:absolute;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:#00eaff;
+    box-shadow:0 0 25px #00eaff;
+    top:-48px;
+    left:97px;
+}
+
+.robot-face{
+    position:absolute;
+    left:22px;
+    right:22px;
+    top:42px;
+    height:105px;
+    background:#020713;
+    border:1px solid rgba(0,212,255,.35);
+    border-radius:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:35px;
+}
+
+.eye{
+    width:28px;
+    height:12px;
+    border-radius:20px;
+    background:#00eaff;
+    box-shadow:0 0 18px #00eaff;
+    animation:eyePulse 2s infinite;
+}
+
+@keyframes eyePulse{
+    50%{opacity:.5}
+}
+
+.robot-mouth{
+    position:absolute;
+    bottom:32px;
+    left:60px;
+    right:60px;
+    height:4px;
+    background:#168dff;
+    border-radius:10px;
+    box-shadow:0 0 12px #168dff;
+}
+
+.robot-chest{
+    position:absolute;
+    left:62px;
+    right:62px;
+    bottom:25px;
+    height:38px;
+    border:1px solid rgba(0,212,255,.5);
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#00eaff;
+    font-size:9px;
+    font-weight:bold;
+}
+
+/* TRADE CARDS */
+
+.trade-card{
+    position:absolute;
+    z-index:5;
+    min-width:150px;
+    padding:13px 15px;
+    border-radius:14px;
+    background:rgba(7,16,30,.94);
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 15px 35px rgba(0,0,0,.4);
+    animation:cardFloat 4s ease-in-out infinite;
+}
+
+.trade-card strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.trade-card small{
+    color:#77869d;
+}
+
+.trade-status{
+    color:#00e59a;
+    font-size:11px;
+    margin-top:5px;
+}
+
+.trade-one{
+    right:0;
+    top:75px;
+}
+
+.trade-two{
+    left:0;
+    bottom:70px;
+    animation-delay:1s;
+}
+
+@keyframes cardFloat{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+}
+
+/* ================= TICKER ================= */
+
+.ticker{
+    display:flex;
+    overflow:hidden;
+    border-top:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:rgba(0,0,0,.2);
+}
+
+.ticker-track{
+    display:flex;
+    gap:45px;
+    white-space:nowrap;
+    padding:16px 0;
+    animation:ticker 22s linear infinite;
+}
+
+.ticker-item{
+    color:#9aa7bb;
+    font-size:12px;
+}
+
+.ticker-item span{
+    color:#00df9a;
+    margin-left:7px;
+}
+
+@keyframes ticker{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+}
+
+/* ================= DASHBOARD ================= */
+
+.dashboard{
+    padding:70px 55px;
+}
+
+.section-label{
+    color:#00d5ff;
+    font-size:10px;
+    letter-spacing:2px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.section-title{
+    font-size:36px;
+    margin-bottom:35px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    padding:25px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.07);
+    background:rgba(255,255,255,.025);
+}
+
+.stat small{
+    display:block;
+    color:#748198;
+    margin-bottom:12px;
+}
+
+.stat strong{
+    font-size:24px;
+}
+
+.green{
+    color:#00e59a;
+}
+
+.blue{
+    color:#00cfff;
+}
+
+/* ================= FEATURES ================= */
+
+.features{
+    padding:30px 55px 80px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.feature{
+    padding:27px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.07);
+    background:rgba(255,255,255,.025);
+    transition:.3s;
+}
+
+.feature:hover{
+    transform:translateY(-6px);
+    border-color:rgba(0,180,255,.3);
+}
+
+.feature-icon{
+    width:43px;
+    height:43px;
+    border-radius:12px;
+    background:rgba(0,153,255,.1);
+    border:1px solid rgba(0,153,255,.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#00d8ff;
+    margin-bottom:18px;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.feature h3{
+    font-size:16px;
+    margin-bottom:10px;
+}
+
+.feature p{
+    color:#7e8ba0;
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* ================= CTA ================= */
+
+.cta{
+    margin:0 55px 60px;
+    padding:55px 30px;
+    text-align:center;
+    border-radius:24px;
+    border:1px solid rgba(0,175,255,.18);
+    background:
+        radial-gradient(circle at center,rgba(0,145,255,.13),transparent 60%),
+        rgba(0,100,180,.05);
+}
+
+.cta h2{
+    font-size:36px;
+    margin-bottom:12px;
+}
+
+.cta p{
+    max-width:650px;
+    margin:0 auto 25px;
+    color:#8e9bad;
+    line-height:1.7;
+}
+
+/* ================= DISCLAIMER ================= */
+
+.disclaimer{
+    padding:0 55px 35px;
+    color:#647085;
+    font-size:11px;
+    line-height:1.7;
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+    padding:25px;
+    text-align:center;
+    color:#536074;
+    font-size:11px;
+    border-top:1px solid rgba(255,255,255,.06);
+}
+
+/* =====================================================
+   FLOATING WHATSAPP BUTTON
+   ===================================================== */
+
+.whatsapp-float{
+    position:fixed !important;
+
+    right:20px !important;
+    bottom:20px !important;
+
+    width:315px;
+    min-height:68px;
+
+    display:flex !important;
+    align-items:center;
+
+    gap:12px;
+    padding:12px 16px;
+
+    background:#19c463 !important;
+    color:#fff !important;
+
+    border-radius:50px;
+
+    text-decoration:none !important;
+
+    z-index:2147483647 !important;
+
+    box-shadow:
+        0 12px 40px rgba(0,0,0,.55),
+        0 0 30px rgba(25,196,99,.35);
+
+    animation:floatAcross 7s ease-in-out infinite;
+
+    visibility:visible !important;
+    opacity:1 !important;
+
+    cursor:pointer;
+
+    will-change:transform;
+}
+
+/* WHATSAPP ICON */
+
+.whatsapp-icon{
+    width:45px;
+    height:45px;
+    min-width:45px;
+
+    border-radius:50%;
+
+    background:#fff;
+    color:#19c463;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:27px;
+    font-weight:bold;
+}
+
+/* BUTTON TEXT */
+
+.whatsapp-text{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.whatsapp-text strong{
+    color:#fff;
+    font-size:14px;
+    font-weight:900;
+    letter-spacing:.5px;
+    white-space:nowrap;
+}
+
+.whatsapp-text span{
+    color:rgba(255,255,255,.9);
+    font-size:10px;
+    white-space:nowrap;
+}
+
+/* ARROW */
+
+.whatsapp-arrow{
+    margin-left:auto;
+    font-size:24px;
+    font-weight:bold;
+}
+
+/* =====================================================
+   FLOAT AROUND SCREEN
+   ===================================================== */
+
+@keyframes floatAcross{
+
+    0%{
+        transform:translate(0,0);
+    }
+
+    12%{
+        transform:translate(-70px,-20px);
+    }
+
+    25%{
+        transform:translate(-30px,-100px);
+    }
+
+    38%{
+        transform:translate(45px,-70px);
+    }
+
+    50%{
+        transform:translate(80px,20px);
+    }
+
+    62%{
+        transform:translate(20px,65px);
+    }
+
+    75%{
+        transform:translate(-60px,30px);
+    }
+
+    88%{
+        transform:translate(-35px,-45px);
+    }
+
+    100%{
+        transform:translate(0,0);
+    }
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:850px){
+
+    nav{
+        padding:0 18px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+        padding:55px 25px;
+        text-align:center;
+    }
+
+    .hero p{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .robot-area{
+        min-height:420px;
+    }
+
+    .dashboard,
+    .features{
+        padding-left:25px;
+        padding-right:25px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .feature-grid{
+        grid-template-columns:1fr;
+    }
+
+    .cta{
+        margin-left:25px;
+        margin-right:25px;
+    }
+
+    .disclaimer{
+        padding-left:25px;
+        padding-right:25px;
+    }
+}
+
+/* ================= SMALL PHONE ================= */
+
+@media(max-width:600px){
+
+    .page{
+        width:96%;
+        margin-top:8px;
+        border-radius:20px;
+    }
+
+    .hero h1{
+        font-size:45px;
+        letter-spacing:-2px;
+    }
+
+    .robot-area{
+        min-height:350px;
+    }
+
+    .robot{
+        transform:scale(.72);
+    }
+
+    .robot-ring{
+        width:280px;
+        height:280px;
+    }
+
+    .trade-card{
+        transform:scale(.8);
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stat{
+        padding:18px 12px;
+    }
+
+    .stat strong{
+        font-size:20px;
+    }
+
+    .section-title{
+        font-size:29px;
+    }
+
+    .cta h2{
+        font-size:29px;
+    }
+
+    /* MOBILE FLOATING WHATSAPP */
+
+    .whatsapp-float{
+        left:12px !important;
+        right:12px !important;
+        bottom:12px !important;
+
+        width:auto !important;
+
+        min-height:64px;
+
+        border-radius:18px;
+
+        animation:mobileFloat 5s ease-in-out infinite;
+    }
+
+    .whatsapp-icon{
+        width:42px;
+        height:42px;
+        min-width:42px;
+    }
+
+    .whatsapp-text strong{
+        font-size:13px;
+    }
+
+    .whatsapp-text span{
+        font-size:9px;
+    }
+}
+
+/* MOBILE MOVEMENT */
+
+@keyframes mobileFloat{
+
+    0%{
+        transform:translate(0,0);
+    }
+
+    20%{
+        transform:translate(7px,-15px);
+    }
+
+    40%{
+        transform:translate(-5px,-28px);
+    }
+
+    60%{
+        transform:translate(7px,-18px);
+    }
+
+    80%{
+        transform:translate(-5px,-8px);
+    }
+
+    100%{
+        transform:translate(0,0);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+
+<div class="page">
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <div class="logo">
+            AI <span>BOT</span> TRADER
+        </div>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#features">Features</a>
+        </div>
+
+        <a
+            href="https://chat.whatsapp.com/JC3ANmehiPz9eDtDrdsGPS"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-btn"
+        >
+            Join Group
+        </a>
+
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero" id="home">
+
+        <div>
+
+            <div class="badge">
+                <span class="badge-dot"></span>
+                AI POWERED TRADING TECHNOLOGY
+            </div>
+
+            <h1>
+                TRADE<br>
+                <span>SMARTER.</span>
+            </h1>
+
+            <p>
+                AI BOT TRADER is designed to monitor market conditions,
+                analyze configured trading setups and assist with
+                automated trading while you are away from your phone.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="https://chat.whatsapp.com/JC3ANmehiPz9eDtDrdsGPS"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="primary-btn"
+                >
+                    JOIN WHATSAPP GROUP
+                </a>
+
+                <a
+                    href="#features"
+                    class="secondary-btn"
+                >
+                    Explore Features
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI ROBOT -->
+
+        <div class="robot-area">
+
+            <div class="robot-glow"></div>
+
+            <div class="robot-ring"></div>
+
+            <div class="robot">
+
+                <div class="robot-face">
+
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+
+                </div>
+
+                <div class="robot-mouth"></div>
+
+                <div class="robot-chest">
+                    AI ACTIVE
+                </div>
+
+            </div>
+
+
+            <div class="trade-card trade-one">
+
+                <strong>EUR/USD</strong>
+
+                <small>
+                    Market Scanner
+                </small>
+
+                <div class="trade-status">
+                    ● MONITORING
+                </div>
+
+            </div>
+
+
+            <div class="trade-card trade-two">
+
+                <strong>GBP/USD</strong>
+
+                <small>
+                    AI Analysis
+                </small>
+
+                <div class="trade-status">
+                    ● ACTIVE
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MARKET TICKER -->
+
+    <div class="ticker">
+
+        <div class="ticker-track">
+
+            <div class="ticker-item">
+                EUR/USD <span>● ACTIVE</span>
+            </div>
+
+            <div class="ticker-item">
+                GBP/USD <span>● MONITORING</span>
+            </div>
+
+            <div class="ticker-item">
+                USD/JPY <span>● ANALYZING</span>
+            </div>
+
+            <div class="ticker-item">
+                XAU/USD <span>● SCANNING</span>
+            </div>
+
+            <div class="ticker-item">
+                BTC/USD <span>● MONITORING</span>
+            </div>
+
+            <div class="ticker-item">
+                EUR/USD <span>● ACTIVE</span>
+            </div>
+
+            <div class="ticker-item">
+                GBP/USD <span>● MONITORING</span>
+            </div>
+
+            <div class="ticker-item">
+                USD/JPY <span>● ANALYZING</span>
+            </div>
+
+            <div class="ticker-item">
+                XAU/USD <span>● SCANNING</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <section class="dashboard" id="dashboard">
+
+        <div class="section-label">
+            SYSTEM STATUS
+        </div>
+
+        <h2 class="section-title">
+            AI Trading Dashboard
+        </h2>
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <small>
+                    AI ENGINE
+                </small>
+
+                <strong class="blue">
+                    ONLINE
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <small>
+                    MARKET SCANNER
+                </small>
+
+                <strong class="green">
+                    ACTIVE
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <small>
+                    MARKET MONITORING
+                </small>
+
+                <strong>
+                    24/7
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <small>
+                    EXECUTION
+                </small>
+
+                <strong class="blue">
+                    AUTOMATED
+  
